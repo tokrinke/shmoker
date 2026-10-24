@@ -1,0 +1,38 @@
+/* COUNTDOWN RING around the active player's avatar (a rounded square that drains clockwise) */
+.turn-timer {
+  position: relative;
+  display: grid;
+  width: 62px;
+  height: 62px;
+  flex: none;
+  place-items: center;
+}
+.turn-timer__ring { position: absolute; inset: 0; width: 100%; height: 100%; }
+.turn-timer__track,
+.turn-timer__progress { fill: none; stroke-width: 2.4; }
+.turn-timer__track { stroke: var(--color-border-strong); }
+.turn-timer__progress {
+  stroke: var(--color-accent);
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+  animation: turn-timer-drain var(--timer-duration) linear var(--timer-delay) forwards;
+}
+.turn-timer--warning .turn-timer__progress { stroke: var(--color-danger); }
+.turn-timer--warning .turn-timer__seconds { color: var(--color-danger); border-color: var(--color-danger); }
+.turn-timer__content { position: relative; z-index: 1; }
+.turn-timer__seconds {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  min-width: 24px;
+  padding: 1px 5px;
+  color: var(--color-text);
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-align: center;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-small);
+}
+@keyframes turn-timer-drain { to { stroke-dashoffset: 100; } }

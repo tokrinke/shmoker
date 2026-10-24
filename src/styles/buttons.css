@@ -1,0 +1,87 @@
+/* Buttons used everywhere: .button, .button--primary (gold), .button--ghost, .button--danger */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.85rem 1.4rem;
+  color: var(--color-text);
+  font-weight: var(--font-weight-strong);
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  background: var(--color-panel-raised);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-medium);
+  cursor: pointer;
+  transition: transform var(--duration-fast), background var(--duration-fast), border-color var(--duration-fast),
+    box-shadow var(--duration-medium);
+}
+.button:hover:not(:disabled) {
+  background: #232327;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.button--primary {
+  color: var(--color-accent-contrast);
+  background: var(--gradient-gold);
+  border-color: transparent;
+  box-shadow: 0 8px 24px rgba(196, 154, 76, 0.2);
+}
+.button--primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ecd397, #cfa656);
+  border-color: transparent;
+}
+.button--ghost {
+  background: transparent;
+}
+.button--danger {
+  color: var(--color-danger);
+  border-color: rgba(255, 83, 72, 0.4);
+}
+.button--danger:hover:not(:disabled) {
+  background: rgba(255, 83, 72, 0.1);
+  border-color: rgba(255, 83, 72, 0.6);
+}
+.button--small {
+  padding: 0.5rem 0.9rem;
+  font-size: var(--font-size-small);
+}
+
+.button--icon {
+  padding: 0.55rem 0.8rem;
+}
+.button--large {
+  padding: 1rem 1.6rem;
+  font-size: 1.05rem;
+}
+
+/* Idle animation: a thin line of light sweeps across gold buttons every few seconds */
+.button--primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.button--primary::after,
+.landing__choice--primary::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 26%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-250%) skewX(-20deg);
+  animation: button-shine 6.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes button-shine {
+  0%, 62% { transform: translateX(-250%) skewX(-20deg); }
+  82%, 100% { transform: translateX(520%) skewX(-20deg); }
+}

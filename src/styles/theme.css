@@ -1,0 +1,100 @@
+/* =============================================================================================
+   THEME - the one place to change how the site looks.
+   Everything else reads these variables. Examples:
+     blue table   -> change --color-table-felt and --color-table-felt-dark
+     other accent -> change --color-accent (gold) and --color-accent-soft
+     bigger seats -> change --seat-width
+     calmer glow  -> edit --shadow-active-player
+   ============================================================================================= */
+:root {
+  /* Background & panels (near-black, Apple style) */
+  --color-background: #070605;
+  --color-background-glow-warm: rgba(212, 176, 106, 0.09);
+  --color-background-glow-green: rgba(14, 74, 51, 0.2);
+  --color-panel: #11100f;
+  --color-panel-raised: #1a1917;
+  --color-border: rgba(255, 238, 205, 0.09);
+  --color-border-strong: rgba(255, 238, 205, 0.18);
+
+  /* Text */
+  --color-text: #f4f1ea;
+  --color-text-muted: #a8a398;
+  --color-text-faint: #6f6a60;
+
+  /* Accent: champagne gold, used sparingly */
+  --color-accent: #d4b06a;
+  --color-accent-strong: #c49a4c;
+  --color-accent-soft: rgba(212, 176, 106, 0.14);
+  --color-accent-contrast: #16110a; /* text on top of gold */
+  --gradient-gold: linear-gradient(180deg, #e8cb8c, #c49a4c); /* gold buttons and the HOST tag */
+  --color-success: #34c759;
+  --color-warning: #ffb340;
+  --color-danger: #ff5348;
+
+  /* Player status dots */
+  --color-status-active: #34c759; /* green: connected & in the hand */
+  --color-status-waiting: #ffb340; /* amber: reconnecting / away */
+  --color-status-folded: #6c6c72; /* gray: folded */
+  --color-status-out: #ff453a; /* red: out of chips / left */
+
+  /* Poker table */
+  --color-table-felt: #0e4a33;
+  --color-table-felt-dark: #06281c;
+  --color-table-rail: #0d0a08;
+  --color-table-rail-highlight: #35291f;
+  --color-table-line: rgba(255, 255, 255, 0.06);
+
+  /* Playing cards */
+  --color-card-face: #f7f6f2;
+  --color-card-red: #c4202f;
+  --color-card-black: #141416;
+  --color-card-back-base: #2b0e18;
+  --color-card-back-pattern: rgba(212, 176, 106, 0.38);
+
+  /* Shadows & glows */
+  --shadow-panel: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 3px 8px rgba(0, 0, 0, 0.5);
+  --shadow-active-player: 0 0 0 1.5px var(--color-accent), 0 0 24px rgba(212, 176, 106, 0.3);
+  --shadow-winner: 0 0 0 1.5px var(--color-success), 0 0 24px rgba(52, 199, 89, 0.3);
+  --shadow-table: 0 0 0 1px var(--color-table-rail-highlight), 0 40px 100px rgba(0, 0, 0, 0.75);
+
+  /* Shape & spacing */
+  --radius-small: 3px;
+  --radius-medium: 5px;
+  --radius-large: 8px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 40px;
+
+  /* Typography: body is SF Pro on Apple devices and Inter elsewhere; titles use a heavy wide display face */
+  --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'Noto Sans Georgian', Roboto,
+    sans-serif;
+  --font-display: 'Archivo', 'Noto Sans Georgian', 'Arial Black', 'Helvetica Neue', sans-serif;
+  --font-mono: 'Inter', 'SF Pro Display', -apple-system, 'Segoe UI', sans-serif; /* numbers (tabular) */
+  --font-weight-body: 500;
+  --font-weight-strong: 700;
+  --font-weight-display: 800;
+  --font-stretch-display: 115%; /* how wide the display face is (100-125) */
+  --font-size-small: 0.86rem;
+  --font-size-body: 1.02rem;
+  --font-size-large: 1.35rem;
+  --font-size-title: clamp(2.4rem, 7vw, 5rem);
+
+  /* Animation */
+  --duration-fast: 120ms;
+  --duration-medium: 260ms;
+  --duration-card-deal: 380ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Sizes */
+  --card-width: 62px; /* hole cards of other players */
+  --card-width-hero: 72px; /* your own hole cards */
+  --card-width-community: 86px;
+  --seat-width: 222px;
+  --sidebar-width: 340px;
+  --roster-width: 190px; /* the Players list on the left */
+  --table-radius: 44% / 50%; /* table shape: 50% = full oval, lower = rounder/squarer */
+}

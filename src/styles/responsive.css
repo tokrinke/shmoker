@@ -1,0 +1,42 @@
+/* ALL PHONE / TABLET OVERRIDES live here. */
+
+/* Tablets and small laptops: players list and sidebar move around the table */
+@media (max-width: 1200px) {
+  .room-screen__body { grid-template-columns: 1fr; }
+  .player-list { width: auto; }
+  .player-list__items { flex-direction: row; flex-wrap: wrap; }
+  .player-list__item { flex-direction: row; align-items: center; gap: var(--space-3); }
+  .player-list__stack { padding-left: 0; }
+  .room-screen__sidebar { height: auto; min-height: 0; }
+  .action-log { max-height: 240px; }
+  .poker-table__stage { max-height: none; }
+}
+
+/* Phones */
+@media (max-width: 720px) {
+  :root {
+    --card-width: 40px;
+    --card-width-hero: 58px;
+    --card-width-community: 52px;
+    --seat-width: 140px;
+  }
+  .room-screen { padding: var(--space-3); }
+  .poker-table__stage { aspect-ratio: 3 / 4.4; }
+  .poker-table__felt::after { font-size: 8rem; }
+  .poker-table__pot-amount { font-size: 1.9rem; }
+  .player-seat__panel { gap: 8px; padding: 8px 10px; }
+  .player-seat__avatar-wrap, .turn-timer { width: 46px; height: 46px; }
+  .player-seat__avatar { width: 34px; height: 34px; font-size: 1rem; }
+  .player-info__name { max-width: 66px; font-size: 0.9rem; }
+  .player-info__stack { font-size: 1rem; }
+  .seat-actions__bar .button { padding: 0.7rem 0.8rem; }
+  .seat-actions__raise-panel { width: min(330px, 92vw); }
+  .player-seat[data-slot='0'] { --seat-y: 70%; --bet-dy: -130px; }
+  .player-seat[data-slot='1'] { --seat-x: 18%; --seat-y: 62%; --bet-dx: 84px; --bet-dy: -34px; }
+  .player-seat[data-slot='2'] { --seat-x: 18%; --seat-y: 33%; --bet-dx: 84px; --bet-dy: 34px; }
+  .player-seat[data-slot='3'] { --seat-y: 14%; --bet-dy: 90px; }
+  .player-seat[data-slot='4'] { --seat-x: 82%; --seat-y: 33%; --bet-dx: -84px; --bet-dy: 34px; }
+  .player-seat[data-slot='5'] { --seat-x: 82%; --seat-y: 62%; --bet-dx: -84px; --bet-dy: -34px; }
+  .community-cards { gap: 6px; }
+  .landing__choice { padding: 1rem; }
+}

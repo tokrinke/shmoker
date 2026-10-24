@@ -1,0 +1,95 @@
+/* Global stylesheet: Tailwind, the theme, and the small shared building blocks.
+   Component-specific styles live next to each component (e.g. components/table/PlayerSeat.css). */
+@import './theme.css';
+@import './buttons.css';
+@import './seat-positions.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-body);
+  font-variant-numeric: tabular-nums;
+  background-color: var(--color-background);
+  background-image: radial-gradient(900px 520px at 50% -12%, var(--color-background-glow-warm), transparent 70%),
+    radial-gradient(900px 600px at 50% 115%, var(--color-background-glow-green), transparent 70%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 40%), var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-panel);
+  padding: var(--space-5);
+}
+
+.text-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  color: var(--color-text);
+  font-family: inherit;
+  font-weight: var(--font-weight-strong);
+  background: var(--color-panel-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  outline: none;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+.text-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.field-label {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: var(--font-weight-strong);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.form-error {
+  margin-top: var(--space-3);
+  color: var(--color-danger);
+  font-size: var(--font-size-small);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-panel) 25%, var(--color-panel-raised) 50%, var(--color-panel) 75%);
+  background-size: 200% 100%;
+  border-radius: var(--radius-medium);
+  animation: skeleton-shimmer 1.4s linear infinite;
+}
+@keyframes skeleton-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* Phone/tablet overrides are imported last so they win over component styles. See main.tsx. */

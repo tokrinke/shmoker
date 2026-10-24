@@ -1,0 +1,44 @@
+/* Small shared pieces: the glowing status dot and the connection badge. */
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex: none;
+  background: var(--status-color, var(--color-status-active));
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--status-color, var(--color-status-active));
+}
+.status-dot--active { --status-color: var(--color-status-active); }
+.status-dot--waiting { --status-color: var(--color-status-waiting); }
+.status-dot--folded { --status-color: var(--color-status-folded); box-shadow: none; }
+.status-dot--out { --status-color: var(--color-status-out); }
+
+.connection-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+.connection-badge--online .status-dot { --status-color: var(--color-status-active); }
+.connection-badge--connecting .status-dot,
+.connection-badge--offline .status-dot { --status-color: var(--color-status-waiting); }
+
+/* Gold squarish HOST tag (black bold text) */
+.host-tag {
+  display: inline-block;
+  padding: 2px 7px;
+  color: var(--color-accent-contrast);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  background: var(--gradient-gold);
+  border-radius: var(--radius-small);
+}
+.icon { flex: none; vertical-align: middle; }
+
+/* Player names: bold, with a coloured suit mark */
+.player-name { font-weight: 800; letter-spacing: 0.01em; }
+.player-name__mark { margin-right: 0.4em; color: var(--mark-color, var(--color-accent)); font-size: 0.82em; }

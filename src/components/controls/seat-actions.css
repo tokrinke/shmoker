@@ -1,0 +1,41 @@
+/* FOLD / CALL / RAISE buttons next to your seat, with the bet-size panel opening above them */
+.seat-actions { position: relative; }
+.seat-actions__bar { display: flex; gap: var(--space-2); }
+.seat-actions__bar .button { white-space: nowrap; }
+
+.seat-actions__raise-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  display: flex;
+  width: 360px;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: rgba(12, 11, 10, 0.96);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-panel);
+  transform: translateX(-50%);
+  animation: raise-panel-in var(--duration-medium) var(--ease-out);
+}
+.seat-actions__raise-amount { display: flex; align-items: baseline; justify-content: space-between; }
+.seat-actions__raise-label { color: var(--color-text-muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+.seat-actions__amount-input {
+  width: 150px;
+  padding: 0;
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: right;
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+.seat-actions__slider { width: 100%; accent-color: var(--color-accent); }
+.seat-actions__presets { display: flex; gap: var(--space-2); }
+.seat-actions__presets .button { flex: 1; }
+.seat-actions__confirm { display: flex; flex-direction: column; gap: var(--space-2); }
+
+@keyframes raise-panel-in { from { opacity: 0; transform: translate(-50%, -8px); } }

@@ -1,0 +1,103 @@
+/* LOBBY (waiting room before the game starts) */
+.lobby {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+.lobby__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+.lobby__code {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: var(--font-weight-display);
+  font-stretch: var(--font-stretch-display);
+  letter-spacing: 0.16em;
+}
+.lobby__host { display: flex; align-items: center; gap: 6px; margin: 0; color: var(--color-text-muted); }
+.lobby__host .icon { color: var(--color-accent); }
+.lobby__invite { display: flex; gap: var(--space-2); margin-bottom: var(--space-5); }
+.lobby__invite-link { min-width: 0; font-size: var(--font-size-small); }
+
+.lobby__seats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  padding: 0;
+  margin: 0 0 var(--space-5);
+  list-style: none;
+}
+.lobby__seat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 58px;
+  padding: 0 var(--space-4);
+  background: var(--color-panel-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+}
+.lobby__seat--empty { background: transparent; border-style: dashed; }
+.lobby__seat-number { color: var(--color-text-faint); font-size: var(--font-size-small); }
+.lobby__seat-name { overflow: hidden; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.lobby__seat-empty-label { color: var(--color-text-faint); }
+.lobby__badge {
+  padding: 2px 8px;
+  color: var(--color-text-muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-medium);
+}
+.lobby__badge--you { color: var(--color-accent); border-color: var(--color-accent); }
+
+.game-settings { margin-bottom: var(--space-5); }
+.game-settings__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+.game-settings__label { display: block; margin-bottom: var(--space-1); color: var(--color-text-muted); font-size: var(--font-size-small); }
+.game-settings__save { margin-top: var(--space-3); }
+
+.lobby__footer { text-align: center; }
+.lobby__start { width: 100%; padding: 0.95rem; }
+
+/* Non-hosts see a calm "waiting" block instead of a start button */
+.lobby__waiting {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  text-align: left;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-large);
+}
+.lobby__waiting-pulse {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  background: var(--color-accent);
+  border-radius: 50%;
+  animation: waiting-pulse 1.8s ease-in-out infinite;
+}
+.lobby__waiting-title { margin: 0 0 3px; font-size: 1.1rem; font-weight: 800; }
+.lobby__waiting-note { display: flex; align-items: center; gap: 6px; margin: 0; color: var(--color-text-faint); font-size: var(--font-size-small); }
+@keyframes waiting-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 176, 106, 0.5); opacity: 0.7; }
+  50% { box-shadow: 0 0 0 10px rgba(212, 176, 106, 0); opacity: 1; }
+}
+
+/* Settings the host controls: inputs for the host, flat read-only values (with a lock) for everyone else */
+.game-settings__header { display: flex; align-items: center; justify-content: space-between; }
+.game-settings__lock { display: flex; align-items: center; gap: 6px; margin-bottom: var(--space-2); color: var(--color-text-faint); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.game-settings__field--static { padding: var(--space-3); background: rgba(255, 255, 255, 0.02); border: 1px solid var(--color-border); border-radius: var(--radius-medium); }
+.game-settings__value { display: block; color: var(--color-text-muted); font-size: 1.25rem; font-weight: 800; }
+.game-settings--locked .game-settings__label { margin-bottom: 6px; }
+
+@media (max-width: 720px) {
+  .lobby__seats { grid-template-columns: 1fr; }
+  .game-settings__grid { grid-template-columns: repeat(2, 1fr); }
+  .lobby__invite { flex-direction: column; }
+}

@@ -1,0 +1,127 @@
+/* PLAYER SEATS: panel with avatar, name and balance, plus bet chip, dealer button, host crown and action buttons. */
+.player-seat {
+  position: absolute;
+  left: var(--seat-x);
+  top: var(--seat-y);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: var(--seat-width);
+  transform: translate(-50%, -50%);
+  transition: opacity var(--duration-medium);
+}
+.player-seat--active { z-index: 4; }
+.player-seat__cards { display: flex; gap: 6px; min-height: 8px; }
+.player-seat--you .player-seat__cards { gap: 10px; }
+
+.player-seat__panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(10, 9, 8, 0.88);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  backdrop-filter: blur(14px);
+  transition: box-shadow var(--duration-medium), border-color var(--duration-medium);
+}
+.player-seat--active .player-seat__panel { border-color: transparent; box-shadow: var(--shadow-active-player); }
+.player-seat--winner .player-seat__panel { border-color: transparent; box-shadow: var(--shadow-winner); }
+.player-seat--folded { opacity: 0.5; }
+.player-seat--out { opacity: 0.28; }
+
+/* Golden square crown on the host's panel */
+.player-seat__host {
+  position: absolute;
+  top: -11px;
+  left: -11px;
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  color: var(--color-accent-contrast);
+  background: var(--gradient-gold);
+  border-radius: var(--radius-medium);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.player-seat__avatar-wrap { display: grid; width: 62px; height: 62px; flex: none; place-items: center; }
+.player-seat__avatar {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  background: linear-gradient(145deg, #2c2a27, #171614);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-medium);
+}
+
+.player-info { min-width: 0; line-height: 1.3; }
+.player-info__name-row { display: flex; align-items: center; gap: 7px; }
+.player-info__name { min-width: 0; max-width: 118px; overflow: hidden; font-size: 1.08rem; text-overflow: ellipsis; white-space: nowrap; }
+.player-info__you { color: var(--color-accent); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.player-info__stack { font-family: var(--font-mono); font-size: 1.2rem; font-weight: 800; color: var(--color-accent); }
+.player-info__status { color: var(--color-text-faint); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.player-seat__bet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 800;
+  background: rgba(8, 7, 6, 0.9);
+  border: 1px solid rgba(212, 176, 106, 0.4);
+  border-radius: var(--radius-medium);
+  transform: translate(calc(-50% + var(--bet-dx)), calc(-50% + var(--bet-dy)));
+  animation: bet-pop var(--duration-medium) var(--ease-out);
+}
+.player-seat__dealer-button {
+  position: absolute;
+  right: -12px;
+  bottom: -12px;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  color: #111;
+  font-size: 0.85rem;
+  font-weight: 800;
+  background: #f4f1ea;
+  border-radius: 50%;
+  box-shadow: var(--shadow-card);
+}
+.player-seat__award {
+  position: absolute;
+  top: -8px;
+  color: var(--color-success);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-shadow: 0 0 14px rgba(52, 199, 89, 0.5);
+  animation: award-float 2.4s var(--ease-out) forwards;
+}
+
+/* Your fold / call / raise buttons sit directly under your own info box */
+.player-seat__actions { position: absolute; top: calc(100% + 12px); left: 50%; z-index: 5; transform: translateX(-50%); }
+
+@keyframes bet-pop {
+  from { opacity: 0; transform: translate(calc(-50% + var(--bet-dx) * 0.4), calc(-50% + var(--bet-dy) * 0.4)) scale(0.6); }
+}
+@keyframes award-float {
+  from { opacity: 0; transform: translateY(14px) scale(0.8); }
+  15% { opacity: 1; transform: translateY(-14px) scale(1.15); }
+  to { opacity: 0; transform: translateY(-46px); }
+}

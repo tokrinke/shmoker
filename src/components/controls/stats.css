@@ -1,0 +1,9 @@
+/* TABLE STATS (right side): balance, pot, to call */
+.table-stats { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); }
+.table-stats__row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.table-stats__tile { display: flex; flex-direction: column; gap: 6px; padding: var(--space-3) var(--space-4); background: var(--color-panel-raised); border: 1px solid var(--color-border); border-radius: var(--radius-medium); }
+.table-stats__tile--balance { background: linear-gradient(180deg, rgba(212, 176, 106, 0.1), transparent), var(--color-panel-raised); border-color: rgba(212, 176, 106, 0.25); }
+.table-stats__label { display: flex; align-items: center; gap: 7px; color: var(--color-text-muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.table-stats__value { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; line-height: 1.1; }
+.table-stats__tile--balance .table-stats__value { color: var(--color-accent); font-size: 2.2rem; }
+.table-stats__footer { margin: 0; color: var(--color-text-faint); font-size: var(--font-size-small); font-weight: 700; text-align: center; }

@@ -1,0 +1,135 @@
+/* LANDING PAGE: no box, just the room. Title, name, then two clear choices (create / join). */
+.landing {
+  position: relative;
+  display: grid;
+  min-height: 100%;
+  padding: var(--space-5);
+  place-items: center;
+  overflow: hidden;
+  background: #050403;
+  /* background: radial-gradient(ellipse at 20% 110%, rgba(8, 30, 21, 0.55), transparent 60%), #050403; */
+}
+.landing__content {
+  position: relative;
+  z-index: 1;
+  width: min(720px, 100%);
+}
+.landing__eyebrow {
+  margin: 0 0 var(--space-4);
+  color: var(--color-accent);
+  font-size: 0.78rem;
+  font-weight: var(--font-weight-strong);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+.landing__title {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-display);
+  font-stretch: var(--font-stretch-display);
+  letter-spacing: 0.005em;
+  line-height: 1.1;
+  /* padding-bottom: 0.14em; /* keeps Georgian descenders from being clipped by the gradient text */
+  background: linear-gradient(180deg, #ffffff 30%, #d4b06a 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.landing__subtitle {
+  margin: 0 0 var(--space-6);
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+}
+
+.landing__name { margin-bottom: var(--space-5); }
+.landing__name-input {
+  width: 100%;
+  padding: 0.4rem 0 0.7rem;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 1.7rem;
+  font-weight: var(--font-weight-strong);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--color-border-strong);
+  border-radius: 0;
+  outline: none;
+  transition: border-color var(--duration-medium);
+}
+.landing__name-input::placeholder { color: var(--color-text-faint); }
+.landing__name-input:focus { border-bottom-color: var(--color-accent); }
+
+.landing__choices { display: flex; flex-direction: column; gap: var(--space-3); }
+.landing__choice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: 1.15rem 1.3rem;
+  color: var(--color-text);
+  font-family: inherit;
+  text-align: left;
+  position: relative;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  cursor: pointer;
+  overflow: hidden;
+  transition: background var(--duration-medium), border-color var(--duration-medium), transform var(--duration-fast);
+}
+.landing__choice:hover:not(:disabled) { background: rgba(255, 255, 255, 0.05); border-color: var(--color-border-strong); }
+.landing__choice:active:not(:disabled) { transform: scale(0.995); }
+.landing__choice:disabled { opacity: 0.6; cursor: wait; }
+.landing__choice--primary { background: var(--gradient-gold); color: var(--color-accent-contrast); border-color: transparent; }
+.landing__choice--primary:hover:not(:disabled) { background: linear-gradient(180deg, #f0d599, #cfa656); border-color: transparent; }
+.landing__choice--open { cursor: default; }
+.landing__choice--open::before { animation-duration: 9s; }
+.landing__choice--open:hover { background: rgba(255, 255, 255, 0.025); }
+
+.landing__choice-icon { display: grid; width: 44px; height: 44px; flex: none; place-items: center; border: 1px solid currentColor; border-radius: var(--radius-medium); opacity: 0.9; }
+.landing__choice-text { display: flex; flex: 1; flex-direction: column; gap: 3px; }
+.landing__choice-text strong { font-size: 1.2rem; font-weight: 800; }
+.landing__choice-text small { font-size: var(--font-size-small); font-weight: var(--font-weight-body); opacity: 0.7; }
+/* The arrow pops in quickly and springs a little when you hover a row */
+.landing__choice-arrow {
+  opacity: 0;
+  transform: translateX(-12px) scale(0.7);
+  transition: opacity 120ms ease-out, transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.landing__choice:hover .landing__choice-arrow,
+.landing__choice:focus-visible .landing__choice-arrow { opacity: 0.95; transform: none; }
+@media (hover: none) { .landing__choice-arrow { opacity: 0.6; transform: none; } }
+
+/* Idle animation for the outline row: a thin gold highlight slowly travels around the border */
+@property --orbit-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.landing__choice:not(.landing__choice--primary)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  background: conic-gradient(from var(--orbit-angle), transparent 0%, transparent 68%, rgba(232, 203, 140, 0.9) 90%, transparent 100%);
+  border-radius: inherit;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: orbit 6s linear infinite;
+  pointer-events: none;
+}
+@keyframes orbit { to { --orbit-angle: 360deg; } }
+
+.landing__code-input {
+  min-width: 0;
+  flex: 1;
+  padding: 0.5rem 0;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+.landing__code-input::placeholder { color: var(--color-text-faint); letter-spacing: 0.2em; }

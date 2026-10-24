@@ -1,0 +1,103 @@
+/* THE TABLE: stage, leather rail, felt, and the pot / community cards in the middle.
+   To recolour the table edit --color-table-* in styles/theme.css. */
+.poker-table { display: grid; width: 100%; place-items: center; padding-bottom: 70px; /* room for your action buttons under your seat */ }
+.poker-table__stage {
+  position: relative;
+  width: 100%;
+  max-height: calc(100vh - 230px);
+  aspect-ratio: 16 / 12;
+}
+
+.poker-table__rail {
+  position: absolute;
+  inset: 8% 6%;
+  padding: 16px;
+  background: linear-gradient(165deg, var(--color-table-rail-highlight), var(--color-table-rail) 60%);
+  border-radius: var(--table-radius);
+  box-shadow: var(--shadow-table), inset 0 0 0 1px rgba(212, 176, 106, 0.2), inset 0 2px 0 rgba(255, 255, 255, 0.06);
+}
+.poker-table__felt {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at 50% 38%, var(--color-table-felt), var(--color-table-felt-dark) 88%);
+  border-radius: var(--table-radius);
+  box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(0, 0, 0, 0.35);
+}
+/* Fine gold stitching line and a faint spade in the middle */
+.poker-table__felt::before {
+  content: '';
+  position: absolute;
+  inset: 4.5%;
+  border: 1.5px dashed rgba(212, 176, 106, 0.2);
+  border-radius: var(--table-radius);
+}
+.poker-table__felt::after {
+  content: '\2660';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: rgba(255, 255, 255, 0.035);
+  font-size: 15rem;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+}
+
+.poker-table__center {
+  position: absolute;
+  left: 50%;
+  top: 43%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  transform: translate(-50%, -50%);
+}
+.poker-table__stage-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-stretch: 112%;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+.poker-table__pot { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.poker-table__pot-label { color: rgba(255, 255, 255, 0.55); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; }
+.poker-table__pot-amount {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 800;
+  font-stretch: 108%;
+  line-height: 1;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+}
+.poker-table__pot-amount .icon { color: var(--color-accent); }
+.poker-table__side-pots { display: flex; gap: var(--space-3); color: rgba(255, 255, 255, 0.7); font-size: var(--font-size-small); font-weight: 700; }
+
+.community-cards { display: flex; gap: 12px; }
+.community-cards__slot {
+  width: var(--card-width-community);
+  aspect-ratio: 5 / 7;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 5px;
+}
+
+.poker-table__result {
+  padding: 0.55rem 1.2rem;
+  text-align: center;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(52, 199, 89, 0.55);
+  border-radius: var(--radius-medium);
+  animation: result-in var(--duration-medium) var(--ease-out);
+}
+.poker-table__game-over { margin-top: var(--space-1); color: var(--color-accent); }
+@keyframes result-in { from { opacity: 0; transform: translateY(8px); } }

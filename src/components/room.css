@@ -1,0 +1,23 @@
+/* ROOM SCREEN LAYOUT: header, then players (left), table (middle), balance + log (right). */
+.room-screen { position: relative; z-index: 1; display: flex; min-height: 100%; flex-direction: column; padding: var(--space-4) var(--space-5) var(--space-4); }
+.room-screen__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+.room-screen__title { display: flex; align-items: center; gap: var(--space-4); }
+.room-screen__code { font-family: var(--font-display); font-size: var(--font-size-large); font-weight: var(--font-weight-display); font-stretch: 112%; letter-spacing: 0.22em; }
+.room-screen__header-actions { display: flex; gap: var(--space-2); }
+
+.room-screen__body {
+  display: grid;
+  flex: 1;
+  grid-template-columns: var(--roster-width) minmax(0, 1fr) var(--sidebar-width);
+  gap: var(--space-5);
+  align-items: start;
+}
+.room-screen__main { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); min-width: 0; }
+.room-screen__sidebar { display: flex; flex-direction: column; gap: var(--space-4); height: calc(100vh - 150px); min-height: 420px; }
+
+/* Waiting room: the box sits in the middle of the screen, a little lower than centre */
+.room-screen__lobby { display: grid; flex: 1; place-items: center; padding-bottom: 6vh; }
+.room-screen__lobby-stack { display: grid; gap: var(--space-4); width: min(680px, 100%); }
+.room-screen__skeleton { height: 70vh; }
+
+.room-message { width: min(480px, 90%); margin: 20vh auto; text-align: center; }

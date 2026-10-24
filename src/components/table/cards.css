@@ -1,0 +1,41 @@
+/* PLAYING CARDS (faces, backs, sizes and the deal animation) */
+.playing-card {
+  --current-width: var(--card-width);
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: var(--current-width);
+  aspect-ratio: 5 / 7;
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1;
+  background: var(--color-card-face);
+  border-radius: calc(var(--current-width) * 0.075);
+  box-shadow: var(--shadow-card);
+  user-select: none;
+  animation: card-deal-in var(--duration-card-deal) var(--ease-out) both;
+  animation-delay: var(--deal-delay, 0ms);
+}
+.playing-card--small { --current-width: var(--card-width); }
+.playing-card--hero { --current-width: var(--card-width-hero); }
+.playing-card--community { --current-width: var(--card-width-community); }
+
+.playing-card__rank { font-size: calc(var(--current-width) * 0.42); }
+.playing-card__suit { font-size: calc(var(--current-width) * 0.46); }
+.playing-card--red { color: var(--color-card-red); }
+.playing-card--black { color: var(--color-card-black); }
+
+.playing-card--back {
+  background-color: var(--color-card-back-base);
+  background-image: repeating-linear-gradient(45deg, transparent 0 5px, var(--color-card-back-pattern) 5px 5.6px),
+    repeating-linear-gradient(-45deg, transparent 0 5px, var(--color-card-back-pattern) 5px 5.6px);
+  border: 2px solid var(--color-card-face);
+}
+
+@keyframes card-deal-in {
+  from { opacity: 0; transform: translateY(-36px) scale(0.8) rotate(-8deg); }
+  to { opacity: 1; transform: none; }
+}

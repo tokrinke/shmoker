@@ -1,0 +1,20 @@
+/* BETTING CONTROLS (right-hand panel on desktop) */
+.betting-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+.betting-controls__status { font-family: var(--font-display); font-size: 1.05rem; font-weight: 800; font-stretch: 108%; letter-spacing: 0.04em; }
+.betting-controls__facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); margin: 0; }
+.betting-controls__facts div { padding: var(--space-2) var(--space-3); background: var(--color-panel-raised); border-radius: var(--radius-medium); }
+.betting-controls__facts dt { color: var(--color-text-muted); font-size: 0.68rem; text-transform: uppercase; }
+.betting-controls__facts dd { margin: 0; font-family: var(--font-mono); font-weight: 800; font-size: 1.05rem; }
+.betting-controls__main { display: grid; grid-template-columns: 1fr 1.4fr; gap: var(--space-2); }
+.betting-controls__raise { display: grid; grid-template-columns: 1fr 96px; gap: var(--space-2); align-items: center; }
+.betting-controls__presets { grid-column: 1 / -1; display: flex; gap: var(--space-2); }
+.betting-controls__slider { width: 100%; accent-color: var(--color-accent); }
+.betting-controls__amount { padding: 0.5rem 0.6rem; font-family: var(--font-mono); }
+.betting-controls__raise-button { grid-column: 1 / -1; }
+.betting-controls__all-in { grid-column: 1 / -1; }
+.betting-controls__sit-in { width: 100%; }

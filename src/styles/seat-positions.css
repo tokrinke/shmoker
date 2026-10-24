@@ -1,0 +1,16 @@
+/* WHERE EACH SEAT SITS AROUND THE TABLE.
+   Six slots, clockwise starting at the bottom (that's always you). Coordinates are a percentage of the
+   table stage. --bet-dx / --bet-dy move the bet chip from the seat toward the middle of the table.
+   Which slots are used for 2, 3, 4, 5 or 6 players is decided in components/table/seatLayout.ts.
+
+            slot 3
+     slot 2        slot 4
+     slot 1        slot 5
+            slot 0 (you)
+*/
+.player-seat[data-slot='0'] { --seat-x: 50%; --seat-y: 76%; --bet-dx: 150px;  --bet-dy: -12px; }
+.player-seat[data-slot='1'] { --seat-x: 14%; --seat-y: 68%; --bet-dx: 138px;  --bet-dy: 52px; }
+.player-seat[data-slot='2'] { --seat-x: 14%; --seat-y: 31%; --bet-dx: 138px;  --bet-dy: -38px; }
+.player-seat[data-slot='3'] { --seat-x: 50%; --seat-y: 14%; --bet-dx: 150px;  --bet-dy: 58px; }
+.player-seat[data-slot='4'] { --seat-x: 86%; --seat-y: 31%; --bet-dx: -138px; --bet-dy: -38px; }
+.player-seat[data-slot='5'] { --seat-x: 86%; --seat-y: 68%; --bet-dx: -138px; --bet-dy: 52px; }

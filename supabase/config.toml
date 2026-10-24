@@ -1,0 +1,8 @@
+# Minimal Supabase CLI config. Create/link your project with: supabase link --project-ref <ref>
+project_id = "private-poker-club"
+
+[auth]
+enable_anonymous_sign_ins = true
+
+[functions.poker]
+verify_jwt = true
