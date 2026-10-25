@@ -55,7 +55,7 @@ export function Lobby({ view, userId, onError, onNotice }: Props) {
 
       <div className="lobby__invite">
         <input className="text-input lobby__invite-link" readOnly value={link} onFocus={(event) => event.target.select()} />
-        <button className="button button--primary" onClick={copyInvite}><IconCopy size={18} />Invite Link</button>
+        <button className="button button--primary" onClick={copyInvite}><IconCopy size={18} />Copy Invite Link</button>
       </div>
 
       <ul className="lobby__seats">

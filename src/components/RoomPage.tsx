@@ -104,6 +104,7 @@ export function RoomPage({ roomId, userId }: { roomId: string; userId: string })
               userId={userId}
               connectedIds={connectedIds}
               stacks={new Map(game.seats.map((seat) => [seat.id, seat.stack]))}
+              winnerIds={new Set(game.toActId === null ? game.result?.payouts.map((payout) => payout.playerId) : [])}
             />
           </aside>
           <div className="room-screen__main">
@@ -154,7 +155,7 @@ function useGameFeedback(
   game: PublicGameView | null,
   userId: string,
   connection: string,
-  push: (text: string, tone?: 'info' | 'success' | 'error') => void,
+  push: (text: string, tone?: 'info' | 'success' | 'error' | 'win') => void,
 ) {
   const previous = useRef<PublicGameView | null>(null);
   const previousConnection = useRef(connection);
@@ -188,10 +189,11 @@ function useGameFeedback(
     }
 
     if (game.result && game.result.handNumber !== before.result?.handNumber) {
+      sounds.collect();
       const mine = game.result.payouts.find((payout) => payout.playerId === userId);
       if (mine) {
         sounds.win();
-        push(`You won ${money(mine.amount)}`, 'success');
+        push(`You won ${money(mine.amount)}`, 'win');
       } else {
         const top = game.result.payouts[0];
         const name = game.seats.find((seat) => seat.id === top?.playerId)?.name;

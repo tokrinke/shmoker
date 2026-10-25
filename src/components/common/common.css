@@ -42,3 +42,7 @@
 /* Player names: bold, with a coloured suit mark */
 .player-name { font-weight: 800; letter-spacing: 0.01em; }
 .player-name__mark { margin-right: 0.4em; color: var(--mark-color, var(--color-accent)); font-size: 0.82em; }
+
+/* Numbers that count up glow gold while they change */
+.animated-number { transition: text-shadow 300ms, color 300ms; }
+.animated-number--growing { color: #f1d894; text-shadow: 0 0 14px rgba(232, 203, 140, 0.8); }

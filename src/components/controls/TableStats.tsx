@@ -1,5 +1,6 @@
 import type { PublicGameView } from '@engine';
-import { money } from '../../lib/format';
+import { WIN_COUNT_DELAY, money, wonThisHand } from '../../lib/format';
+import { AnimatedNumber } from '../common/AnimatedNumber';
 import { IconCall, IconCoins, IconWallet } from '../common/Icons';
 import './stats.css';
 
@@ -13,7 +14,7 @@ export function TableStats({ game, userId }: { game: PublicGameView; userId: str
     <section className="table-stats panel">
       <div className="table-stats__tile table-stats__tile--balance">
         <span className="table-stats__label"><IconWallet size={16} />Your balance</span>
-        <span className="table-stats__value">{money(me?.stack ?? 0)}</span>
+        <span className="table-stats__value"><AnimatedNumber value={me?.stack ?? 0} delay={wonThisHand(game, userId) ? WIN_COUNT_DELAY : 0} /></span>
       </div>
       <div className="table-stats__row">
         <div className="table-stats__tile">

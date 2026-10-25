@@ -78,6 +78,10 @@ export interface GameState {
   actionSeq: number;
   deadline: number | null;
   nextHandAt: number | null;
+  /** All-in runout: when the next street (or the showdown) is due. Null when not running out. */
+  runoutAt: number | null;
+  /** True once no more betting is possible and the remaining players' cards are turned face up. */
+  exposed: boolean;
   result: HandResult | null;
   winnerId: string | null;
   log: LogEntry[];
@@ -123,6 +127,9 @@ export interface PublicGameView {
   toActId: string | null;
   deadline: number | null;
   nextHandAt: number | null;
+  runoutAt: number | null;
+  /** Hole cards that are public right now (only during an all-in runout). */
+  reveals: Record<string, Card[]>;
   currentBet: number;
   minRaise: number;
   bigBlind: number;

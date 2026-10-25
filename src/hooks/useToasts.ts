@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 export interface Toast {
   id: number;
   text: string;
-  tone: 'info' | 'success' | 'error';
+  tone: 'info' | 'success' | 'error' | 'win';
 }
 
 let nextId = 1;
@@ -15,7 +15,7 @@ export function useToasts() {
     (text: string, tone: Toast['tone'] = 'info') => {
       const id = nextId++;
       setToasts((all) => [...all.slice(-3), { id, text, tone }]);
-      window.setTimeout(() => dismiss(id), 4000);
+      window.setTimeout(() => dismiss(id), 4500); // keep in sync with toast-life in toasts.css
     },
     [dismiss],
   );

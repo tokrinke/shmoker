@@ -1,5 +1,5 @@
 import type { PublicSeat } from '@engine';
-import { money } from '../../lib/format';
+import { AnimatedNumber } from '../common/AnimatedNumber';
 import { PlayerName } from '../common/PlayerName';
 
 export type SeatStatus = 'active' | 'waiting' | 'folded' | 'out';
@@ -17,6 +17,10 @@ interface Props {
   status: SeatStatus;
   isYou: boolean;
   connected: boolean;
+  /** Wait before counting a win up (see WIN_COUNT_DELAY). */
+  countDelay?: number;
+  /** Best hand so far (shown during an all-in runout and at showdown). */
+  handName?: string;
 }
 
 function statusLabel(seat: PublicSeat, status: SeatStatus, connected: boolean): string {
@@ -28,7 +32,7 @@ function statusLabel(seat: PublicSeat, status: SeatStatus, connected: boolean): 
   return '';
 }
 
-export function PlayerInfo({ seat, status, isYou, connected }: Props) {
+export function PlayerInfo({ seat, status, isYou, connected, countDelay = 0, handName }: Props) {
   const label = statusLabel(seat, status, connected);
   return (
     <div className="player-info">
@@ -36,8 +40,8 @@ export function PlayerInfo({ seat, status, isYou, connected }: Props) {
         <span className={`status-dot status-dot--${status}`} />
         <span className="player-info__name"><PlayerName name={seat.name} seatIndex={seat.seatIndex} /></span>
       </div>
-      <div className="player-info__stack">{money(seat.stack)}</div>
-      {label && <div className="player-info__status">{label}</div>}
+      <div className="player-info__stack"><AnimatedNumber value={seat.stack} delay={countDelay} /></div>
+      {handName ? <div className="player-info__hand">{handName}</div> : label && <div className="player-info__status">{label}</div>}
     </div>
   );
 }

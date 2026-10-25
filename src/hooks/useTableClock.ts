@@ -36,7 +36,7 @@ export function useTableClock(roomId: string, game: PublicGameView | null) {
   }, [sync]);
 
   // Wake the server shortly after the current deadline.
-  const dueAt = game ? (game.deadline ?? game.nextHandAt) : null;
+  const dueAt = game ? (game.deadline ?? game.runoutAt ?? game.nextHandAt) : null;
   useEffect(() => {
     if (!dueAt) return;
     let cancelled = false;
@@ -45,7 +45,7 @@ export function useTableClock(roomId: string, game: PublicGameView | null) {
       await sync();
       if (!cancelled) timer = window.setTimeout(loop, 2500); // still pending? ask again
     };
-    const wait = Math.max(0, dueAt - (Date.now() + offset.current)) + 300 + Math.random() * 1200;
+    const wait = Math.max(0, dueAt - (Date.now() + offset.current)) + 250 + Math.random() * 700;
     timer = window.setTimeout(loop, wait);
     return () => {
       cancelled = true;

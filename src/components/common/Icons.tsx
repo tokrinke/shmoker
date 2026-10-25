@@ -42,3 +42,4 @@ export const IconArrowRight = icon(<path d="M5 12h14M13 6l6 6-6 6" />);
 export const IconUsers = icon(<><circle cx="9" cy="8" r="3.2" /><path d="M3 19c0-3.2 2.7-5 6-5s6 1.8 6 5" /><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M18 14.3c1.8.7 3 2.2 3 4.7" /></>);
 export const IconClock = icon(<><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></>);
 export const IconLock = icon(<><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></>);
+export const IconBell = icon(<><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15L6 16z" /><path d="M10 20.5a2 2 0 0 0 4 0" /></>);

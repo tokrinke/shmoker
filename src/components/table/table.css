@@ -90,13 +90,14 @@
   border-radius: 5px;
 }
 
-.poker-table__result {
-  padding: 0.55rem 1.2rem;
+/* The winner announcement replaces the stage label above the pot */
+.poker-table__stage-label--result {
+  color: var(--color-success);
+  font-size: 1.05rem;
+  font-stretch: 100%;
+  letter-spacing: 0.04em;
   text-align: center;
-  font-weight: 700;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(52, 199, 89, 0.55);
-  border-radius: var(--radius-medium);
+  text-transform: none;
   animation: result-in var(--duration-medium) var(--ease-out);
 }
 .poker-table__game-over { margin-top: var(--space-1); color: var(--color-accent); }

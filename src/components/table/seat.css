@@ -125,3 +125,8 @@
   15% { opacity: 1; transform: translateY(-14px) scale(1.15); }
   to { opacity: 0; transform: translateY(-46px); }
 }
+
+/* Best hand so far, shown in the seat panel while everybody is all-in and at showdown */
+.player-info__hand { color: var(--color-accent); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; animation: result-in var(--duration-medium) var(--ease-out); }
+.player-seat--winner .player-seat__panel { animation: winner-pulse 1.6s ease-in-out 2; }
+@keyframes winner-pulse { 50% { transform: scale(1.04); } }

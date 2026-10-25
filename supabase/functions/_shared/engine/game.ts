@@ -11,6 +11,8 @@ import {
   Seat,
 } from './types.ts';
 
+const RUNOUT_STEP_MS = 2200; // pause before each street is dealt when everybody is all-in
+const RUNOUT_FINAL_MS = 2800; // pause on the final board before the winner is announced
 const AWAY_TURN_MS = 2000; // how long an "away" player gets before their turn is played automatically
 const AWAY_AFTER_TIMEOUTS = 2;
 const MAX_LOG_ENTRIES = 200;
@@ -91,6 +93,8 @@ export function createGame(
     actionSeq: 0,
     deadline: null,
     nextHandAt: null,
+    runoutAt: null,
+    exposed: false,
     result: null,
     winnerId: null,
     log: [],
@@ -128,6 +132,8 @@ export function startHand(
   s.lastFullRaiseTo = s.settings.bigBlind;
   s.minRaise = s.settings.bigBlind;
   s.nextHandAt = null;
+  s.runoutAt = null;
+  s.exposed = false;
   for (const seat of s.seats) {
     seat.bet = 0;
     seat.totalBet = 0;
@@ -203,19 +209,54 @@ function progress(s: GameState, from: number, now: number) {
       beginTurn(s, now);
       return;
     }
+    if (canAct.length <= 1) {
+      // Nobody can bet any more (everyone is all-in): show the cards and deal the rest slowly.
+      startRunout(s, now);
+      return;
+    }
     if (s.phase === 'river') {
       showdown(s, now);
       return;
     }
-    for (const seat of s.seats) {
-      seat.bet = 0;
-      seat.hasActed = false;
-    }
-    s.currentBet = 0;
-    s.lastFullRaiseTo = 0;
-    s.minRaise = s.settings.bigBlind;
+    collectBets(s);
     dealNextStreet(s, now);
     from = s.dealerIndex; // after the flop the first active seat left of the button acts first
+  }
+}
+
+/** Chips from the finished betting round go to the pot; the next round starts fresh. */
+function collectBets(s: GameState) {
+  for (const seat of s.seats) {
+    seat.bet = 0;
+    seat.hasActed = false;
+  }
+  s.currentBet = 0;
+  s.lastFullRaiseTo = 0;
+  s.minRaise = s.settings.bigBlind;
+}
+
+/** Everybody still in is all-in: turn the cards face up and let the board come out step by step. */
+function startRunout(s: GameState, now: number) {
+  collectBets(s);
+  s.toActIndex = -1;
+  s.deadline = null;
+  s.exposed = true;
+  addLog(s, 'No more betting. Cards are turned face up.', now);
+  for (const seat of s.seats.filter(inHand)) {
+    addLog(s, `${seat.name} shows ${seat.cards.map(cardLabel).join(' ')}.`, now);
+  }
+  s.runoutAt = now + (s.phase === 'river' ? RUNOUT_FINAL_MS : RUNOUT_STEP_MS);
+}
+
+/** One step of the runout: deal the next street, or finally decide the winner. */
+function advanceRunout(s: GameState, now: number) {
+  if (s.community.length < 5) {
+    dealNextStreet(s, now);
+    s.runoutAt = now + (s.community.length === 5 ? RUNOUT_FINAL_MS : RUNOUT_STEP_MS);
+    s.actionSeq++;
+  } else {
+    s.runoutAt = null;
+    showdown(s, now);
   }
 }
 
@@ -510,12 +551,13 @@ function showdown(s: GameState, now: number) {
   const live = s.seats.filter(inHand);
   const scores = new Map<string, HandScore>();
   const reveals: HandResult['reveals'] = {};
+  const alreadyShown = s.exposed; // the cards were already announced during an all-in runout
   addLog(s, 'Showdown.', now);
   for (const seat of live) {
     const hand = evaluateHand([...seat.cards, ...s.community]);
     scores.set(seat.id, hand);
     reveals[seat.id] = { cards: [...seat.cards], handName: hand.name };
-    addLog(s, `${seat.name} shows ${seat.cards.map(cardLabel).join(' ')} (${hand.name}).`, now);
+    addLog(s, alreadyShown ? `${seat.name} has ${hand.name}.` : `${seat.name} shows ${seat.cards.map(cardLabel).join(' ')} (${hand.name}).`, now);
   }
 
   const dealerDistance = (id: string) => {
@@ -562,6 +604,8 @@ function finishHand(s: GameState, now: number) {
   s.currentBet = 0;
   s.toActIndex = -1;
   s.deadline = null;
+  s.runoutAt = null;
+  s.exposed = false;
   for (const seat of s.seats) {
     if (!seat.eliminated && seat.stack <= 0) {
       seat.eliminated = true;
@@ -604,6 +648,11 @@ export function tick(
     performAction(s, index, { type: canCheck ? 'check' : 'fold' }, now, true);
     return { state: s, changed: true };
   }
+  if (isBetting(state.phase) && state.runoutAt !== null && now >= state.runoutAt) {
+    const s = structuredClone(state);
+    advanceRunout(s, now);
+    return { state: s, changed: true };
+  }
   if (state.phase === 'handover' && state.nextHandAt !== null && now >= state.nextHandAt) {
     return { state: startHand(state, randomInt, now), changed: true };
   }
@@ -619,7 +668,7 @@ export function markLeft(state: GameState, playerId: string, now: number = Date.
   seat.left = true;
   addLog(s, `${seat.name} left the table.`, now);
 
-  if (isBetting(s.phase) && inHand(seat)) {
+  if (isBetting(s.phase) && inHand(seat) && s.runoutAt === null) {
     if (index === s.toActIndex) {
       performAction(s, index, { type: 'fold' }, now, true);
     } else {
@@ -667,6 +716,8 @@ export function publicView(state: GameState): PublicGameView {
     toActId: midHand && state.toActIndex >= 0 ? state.seats[state.toActIndex].id : null,
     deadline: state.deadline,
     nextHandAt: state.nextHandAt,
+    runoutAt: state.runoutAt,
+    reveals: revealedCards(state),
     currentBet: state.currentBet,
     minRaise: state.minRaise,
     bigBlind: state.settings.bigBlind,
@@ -692,6 +743,14 @@ export function publicView(state: GameState): PublicGameView {
     winnerId: state.winnerId,
     settings: state.settings,
   };
+}
+
+/** During an all-in runout the remaining players' cards are public (nobody can bet any more). */
+function revealedCards(state: GameState): Record<string, Card[]> {
+  const cards: Record<string, Card[]> = {};
+  if (!state.exposed || !isBetting(state.phase)) return cards;
+  for (const seat of state.seats.filter(inHand)) cards[seat.id] = [...seat.cards];
+  return cards;
 }
 
 /** Hole cards per player. Each entry may only ever be sent to that player. */

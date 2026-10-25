@@ -28,8 +28,8 @@ export function LandingPage({ joinCode }: { joinCode?: string }) {
     <main className="landing">
       <AmbientFlakes />
       <div className="landing__content">
-        <p className="landing__eyebrow">Private room &middot; invitation only</p>
-        <h1 className="landing__title">SHMOKER</h1>
+        <p className="landing__eyebrow">Private room &middot; By invitation only</p>
+        <h1 className="landing__title">პოკერი კედლისქუჩაზე</h1>
         <p className="landing__subtitle">A quiet table for friends. Good cards, good company.</p>
 
         <div className="landing__name">

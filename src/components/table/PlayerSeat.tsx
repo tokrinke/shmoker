@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Card, PublicSeat } from '@engine';
-import { money } from '../../lib/format';
+import { WIN_COUNT_DELAY, money } from '../../lib/format';
 import { IconCoins, IconCrown } from '../common/Icons';
 import { PlayerInfo, seatStatus } from './PlayerInfo';
 import { PlayingCard } from './PlayingCard';
@@ -23,9 +23,11 @@ interface Props {
   wonAmount?: number;
   /** Fold / Call / Raise buttons, shown next to your own seat. */
   actions?: ReactNode;
+  /** Name of the best hand so far, shown while cards are face up during an all-in runout. */
+  handName?: string;
 }
 
-export function PlayerSeat({ seat, slot, isYou, isHost, isDealer, isActive, connected, visibleCards, timer, wonAmount, actions }: Props) {
+export function PlayerSeat({ seat, slot, isYou, isHost, isDealer, isActive, connected, visibleCards, timer, wonAmount, actions, handName }: Props) {
   const status = seatStatus(seat, connected);
   const classes = [
     'player-seat',
@@ -41,7 +43,7 @@ export function PlayerSeat({ seat, slot, isYou, isHost, isDealer, isActive, conn
   const avatar = <div className="player-seat__avatar">{seat.name.slice(0, 1).toUpperCase()}</div>;
 
   return (
-    <div className={classes} data-slot={slot}>
+    <div className={classes} data-slot={slot} data-seat-id={seat.id}>
       <div className="player-seat__cards">
         {visibleCards
           ? visibleCards.map((card) => <PlayingCard key={card} card={card} size={isYou ? 'hero' : 'small'} />)
@@ -51,7 +53,7 @@ export function PlayerSeat({ seat, slot, isYou, isHost, isDealer, isActive, conn
       <div className="player-seat__panel">
         {isHost && <span className="player-seat__host" title="Host"><IconCrown size={15} /></span>}
         {timer && isActive ? <TurnTimer {...timer}>{avatar}</TurnTimer> : <div className="player-seat__avatar-wrap">{avatar}</div>}
-        <PlayerInfo seat={seat} status={status} isYou={isYou} connected={connected} />
+        <PlayerInfo seat={seat} status={status} isYou={isYou} connected={connected} countDelay={wonAmount ? WIN_COUNT_DELAY : 0} handName={handName} />
       </div>
 
       {seat.bet > 0 && (

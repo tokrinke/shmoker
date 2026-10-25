@@ -18,7 +18,7 @@
   font-stretch: var(--font-stretch-display);
   letter-spacing: 0.16em;
 }
-.lobby__host { display: flex; align-items: center; gap: 6px; margin: 0; color: var(--color-text-muted); }
+.lobby__host { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--color-text-muted); }
 .lobby__host .icon { color: var(--color-accent); }
 .lobby__invite { display: flex; gap: var(--space-2); margin-bottom: var(--space-5); }
 .lobby__invite-link { min-width: 0; font-size: var(--font-size-small); }

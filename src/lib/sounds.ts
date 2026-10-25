@@ -131,6 +131,15 @@ export const sounds = {
     });
   }),
 
+  /** Chips sliding toward the winner. */
+  collect: play(() => {
+    for (let i = 0; i < 7; i++) {
+      const at = i * 0.075 + jitter(0.012);
+      burst({ at, from: 6200 + jitter(600), q: 2.2, duration: 0.035, volume: 0.17 });
+      ping({ at, freq: 2100 + jitter(400), duration: 0.08, volume: 0.05 });
+    }
+  }),
+
   /** A light double knock on the table. */
   check: play(() => {
     [0, 0.1].forEach((at) => {

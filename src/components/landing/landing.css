@@ -6,13 +6,12 @@
   padding: var(--space-5);
   place-items: center;
   overflow: hidden;
-  background: #050403;
-  /* background: radial-gradient(ellipse at 20% 110%, rgba(8, 30, 21, 0.55), transparent 60%), #050403; */
+  background: radial-gradient(ellipse at 20% 110%, rgba(8, 30, 21, 0.55), transparent 60%), #050403;
 }
 .landing__content {
   position: relative;
   z-index: 1;
-  width: min(720px, 100%);
+  width: min(620px, 100%);
 }
 .landing__eyebrow {
   margin: 0 0 var(--space-4);
@@ -30,7 +29,7 @@
   font-stretch: var(--font-stretch-display);
   letter-spacing: 0.005em;
   line-height: 1.1;
-  /* padding-bottom: 0.14em; /* keeps Georgian descenders from being clipped by the gradient text */
+  padding-bottom: 0.14em; /* keeps Georgian descenders from being clipped by the gradient text */
   background: linear-gradient(180deg, #ffffff 30%, #d4b06a 130%);
   -webkit-background-clip: text;
   background-clip: text;

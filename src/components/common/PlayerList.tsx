@@ -1,4 +1,5 @@
-import { money } from '../../lib/format';
+import { WIN_COUNT_DELAY } from '../../lib/format';
+import { AnimatedNumber } from './AnimatedNumber';
 import { IconUsers } from './Icons';
 import { PlayerName } from './PlayerName';
 import './players.css';
@@ -10,10 +11,12 @@ interface Props {
   connectedIds: Set<string>;
   /** Current chips per player, when a game is running. */
   stacks?: Map<string, number>;
+  /** Players who just won a pot (their balance counts up after the chips arrive). */
+  winnerIds?: Set<string>;
 }
 
 /** Everyone at the table, top left, one per line. The host carries a gold HOST tag. */
-export function PlayerList({ players, hostId, userId, connectedIds, stacks }: Props) {
+export function PlayerList({ players, hostId, userId, connectedIds, stacks, winnerIds }: Props) {
   const ordered = [...players].sort((a, b) => (a.id === hostId ? -1 : b.id === hostId ? 1 : a.seat - b.seat));
   return (
     <section className="player-list">
@@ -26,7 +29,7 @@ export function PlayerList({ players, hostId, userId, connectedIds, stacks }: Pr
               <span className="player-list__name"><PlayerName name={player.name} seatIndex={player.seat} /></span>
               {player.id === hostId && <span className="host-tag">Host</span>}
             </div>
-            {stacks?.has(player.id) && <span className="player-list__stack">{money(stacks.get(player.id) as number)}</span>}
+            {stacks?.has(player.id) && <span className="player-list__stack"><AnimatedNumber value={stacks.get(player.id) as number} delay={winnerIds?.has(player.id) ? WIN_COUNT_DELAY : 0} /></span>}
           </li>
         ))}
       </ul>

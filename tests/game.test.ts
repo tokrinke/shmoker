@@ -58,6 +58,12 @@ const toActId = (state: GameState) => state.seats[state.toActIndex].id;
 const seat = (state: GameState, id: string) => state.seats.find((s) => s.id === id)!;
 const totalChips = (state: GameState) => state.seats.reduce((sum, s) => sum + s.stack + s.totalBet, 0);
 
+/** Plays out an all-in runout: waits for every scheduled step (streets, then the showdown). */
+function settle(state: GameState): GameState {
+  while (state.runoutAt !== null) state = tick(state, state.runoutAt).state;
+  return state;
+}
+
 function checkDown(state: GameState): GameState {
   while (state.toActIndex >= 0 && state.phase !== 'handover') state = act(state, toActId(state), { type: 'check' });
   return state;
@@ -222,7 +228,9 @@ test('side pots: three players all-in for different amounts, each pot goes to th
   state = act(state, 'p0', { type: 'allin' });
   state = act(state, 'p1', { type: 'allin' });
   state = act(state, 'p2', { type: 'call' });
-  assert.equal(state.phase, 'handover', 'board is run out automatically');
+  assert.notEqual(state.runoutAt, null, 'the board comes out step by step');
+  state = settle(state);
+  assert.equal(state.phase, 'handover');
   assert.equal(state.community.length, 5);
   assert.deepEqual(state.result!.pots.map((p) => p.amount), [300, 400]);
   assert.deepEqual(state.result!.pots[0].eligibleIds, ['p0', 'p1', 'p2']);
@@ -238,6 +246,7 @@ test('uncalled bets are returned', () => {
   let state = begin(newGame(2, {}, [500, 40]), { 0: ['Ks', 'Kh'], 1: ['As', 'Ah'] }, BLANK_BOARD);
   state = act(state, 'p0', { type: 'raise', amount: 100 });
   state = act(state, 'p1', { type: 'allin' }); // can only call 40 in total
+  state = settle(state);
   assert.deepEqual(state.result?.uncalled, { playerId: 'p0', amount: 60 });
   assert.equal(seat(state, 'p1').stack, 80);
   assert.equal(seat(state, 'p0').stack, 460);
@@ -313,6 +322,7 @@ test('players eliminated at zero chips; game ends with a winner', () => {
   let state = begin(newGame(2), { 0: ['As', 'Ah'], 1: ['Ks', 'Kh'] }, BLANK_BOARD);
   state = act(state, 'p0', { type: 'allin' });
   state = act(state, 'p1', { type: 'call' });
+  state = settle(state);
   assert.equal(state.phase, 'gameover');
   assert.equal(state.winnerId, 'p0');
   assert.equal(seat(state, 'p1').eliminated, true);
@@ -387,6 +397,85 @@ test('the public view never contains the deck or hidden hole cards', () => {
   assert.deepEqual(privateCards(state).p1, ['Ks', 'Kh']);
 });
 
+// ---- all-in runout (slow reveal) -----------------------------------------------------------------------
+
+test('all-in runout: cards are shown, then flop, turn, river and the winner are revealed one step at a time', () => {
+  let state = begin(newGame(2), { 0: ['As', 'Ah'], 1: ['Ks', 'Kh'] }, BLANK_BOARD);
+  state = act(state, 'p0', { type: 'allin' });
+  state = act(state, 'p1', { type: 'call' });
+
+  // step 0: nobody can act, the hands are public, nothing dealt yet, no result yet
+  assert.equal(state.phase, 'preflop');
+  assert.equal(state.community.length, 0);
+  assert.equal(state.result, null);
+  assert.equal(state.toActIndex, -1);
+  assert.equal(state.deadline, null);
+  const view = publicView(state);
+  assert.deepEqual(view.reveals, { p0: ['As', 'Ah'], p1: ['Ks', 'Kh'] });
+  assert.equal(view.toActId, null);
+
+  // nothing happens before the step is due
+  assert.equal(tick(state, state.runoutAt! - 1).changed, false);
+
+  state = tick(state, state.runoutAt!).state;
+  assert.equal(state.phase, 'flop');
+  assert.deepEqual(state.community, ['2c', '7d', '9h']);
+  assert.equal(state.result, null);
+
+  state = tick(state, state.runoutAt!).state;
+  assert.equal(state.phase, 'turn');
+  assert.equal(state.community.length, 4);
+
+  state = tick(state, state.runoutAt!).state;
+  assert.equal(state.phase, 'river');
+  assert.equal(state.community.length, 5);
+  assert.equal(state.result, null, 'the winner is not announced until the final pause is over');
+
+  state = tick(state, state.runoutAt!).state;
+  assert.equal(state.phase, 'gameover');
+  assert.equal(state.result?.payouts[0].playerId, 'p0');
+  assert.equal(state.runoutAt, null);
+  assert.deepEqual(publicView(state).reveals, {}, 'reveals are only public during the runout; the result carries them afterwards');
+});
+
+test('all-in on the river still pauses before the winner is announced', () => {
+  let state = begin(newGame(2), { 0: ['As', 'Ah'], 1: ['Ks', 'Kh'] }, BLANK_BOARD);
+  state = act(state, 'p0', { type: 'call' });
+  state = act(state, 'p1', { type: 'check' });
+  for (let street = 0; street < 2; street++) {
+    state = act(state, toActId(state), { type: 'check' });
+    state = act(state, toActId(state), { type: 'check' });
+  }
+  assert.equal(state.phase, 'river');
+  state = act(state, toActId(state), { type: 'allin' });
+  state = act(state, toActId(state), { type: 'call' });
+  assert.equal(state.result, null);
+  assert.notEqual(state.runoutAt, null);
+  assert.equal(publicView(state).community.length, 5);
+  state = settle(state);
+  assert.equal(state.result?.payouts[0].playerId, 'p0');
+});
+
+test('a normal river showdown (no all-in) is still instant', () => {
+  let state = begin(newGame(2), { 0: ['As', 'Ah'], 1: ['Ks', 'Kh'] }, BLANK_BOARD);
+  state = act(state, 'p0', { type: 'call' });
+  state = act(state, 'p1', { type: 'check' });
+  state = checkDown(state);
+  assert.equal(state.phase, 'handover');
+  assert.equal(state.runoutAt, null);
+});
+
+test('during a runout nobody can act, and folded players\' cards stay hidden', () => {
+  let state = begin(newGame(3, {}, [500, 100, 100]), { 0: ['As', 'Ah'], 1: ['Ks', 'Kh'], 2: ['Qs', 'Qh'] }, BLANK_BOARD);
+  state = act(state, 'p0', { type: 'fold' });
+  state = act(state, 'p1', { type: 'allin' });
+  state = act(state, 'p2', { type: 'call' });
+  assert.notEqual(state.runoutAt, null);
+  assert.throws(() => act(state, 'p1', { type: 'check' }), EngineError);
+  assert.deepEqual(Object.keys(publicView(state).reveals).sort(), ['p1', 'p2']);
+  assert.ok(!JSON.stringify(publicView(state)).includes('"As"'), 'the folded player keeps their cards private');
+});
+
 // ---- chip accounting fuzz --------------------------------------------------------------------------------------
 
 function mulberry32(seed: number) {
@@ -414,6 +503,11 @@ test('fuzz: chips are conserved and every game terminates (2-6 players, random s
       assert.equal(totalChips(state), total, `game ${game} step ${step}: chips changed`);
       if (state.phase === 'handover') {
         now = state.nextHandAt!;
+        state = tick(state, now, randomInt).state;
+        continue;
+      }
+      if (state.runoutAt !== null) {
+        now = state.runoutAt;
         state = tick(state, now, randomInt).state;
         continue;
       }
